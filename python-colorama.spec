@@ -8,7 +8,7 @@
 Summary:	Cross-platform colored terminal text
 Name:		python-%{module}
 Version:	0.3.1
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://pypi.python.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
@@ -120,6 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG.rst README.txt
+%dir %{py_sitescriptdir}/%{module}
 %{py_sitescriptdir}/%{module}/*.py[co]
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/%{module}-*.egg-info
