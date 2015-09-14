@@ -8,7 +8,7 @@
 Summary:	Cross-platform colored terminal text
 Name:		python-%{module}
 Version:	0.3.1
-Release:	4
+Release:	5
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://pypi.python.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
