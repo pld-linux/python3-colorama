@@ -15,7 +15,7 @@ Source0:	https://pypi.python.org/packages/source/c/colorama/%{module}-%{version}
 # Source0-md5:	95ce8bf32f5c25adea14b809db3509cb
 URL:		https://pypi.python.org/pypi/colorama
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.710
 %if %{with python2}
 BuildRequires:	python-distribute
 %endif
