@@ -4,26 +4,28 @@
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
-%define		module	colorama
+%define		module		colorama
+%define		egg_name	colorama
+%define		pypi_name	colorama
 Summary:	Cross-platform colored terminal text
 Name:		python-%{module}
-Version:	0.3.1
-Release:	7
+Version:	0.3.7
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	https://pypi.python.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
-# Source0-md5:	95ce8bf32f5c25adea14b809db3509cb
-URL:		https://pypi.python.org/pypi/colorama
+Source0:	https://files.pythonhosted.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+# Source0-md5:	349d2b02618d3d39e5c6aede36fe3c1a
+URL:		https://github.com/tartley/colorama
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
 %if %{with python2}
-BuildRequires:	python-distribute
+BuildRequires:	python-modules
+BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-distribute
 BuildRequires:	python3-modules
+BuildRequires:	python3-setuptools
 %endif
-Requires:	python-modules
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -43,8 +45,8 @@ library, such as Termcolor (http://pypi.python.org/pypi/termcolor.)
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
 side-effect that existing applications or libraries which use ANSI
-sequences to produce colored output on Linux or Macs can now also
-work on Windows, simply by calling colorama.init().
+sequences to produce colored output on Linux or Macs can now also work
+on Windows, simply by calling colorama.init().
 
 %package -n python3-%{module}
 Summary:	Cross-platform colored terminal text
@@ -66,8 +68,8 @@ library, such as Termcolor (http://pypi.python.org/pypi/termcolor.)
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
 side-effect that existing applications or libraries which use ANSI
-sequences to produce colored output on Linux or Macs can now also
-work on Windows, simply by calling colorama.init().
+sequences to produce colored output on Linux or Macs can now also work
+on Windows, simply by calling colorama.init().
 
 %prep
 %setup -q -n %{module}-%{version}
@@ -86,7 +88,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with python2}
 %py_install
-
 %py_postclean
 %endif
 
@@ -111,19 +112,17 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG.rst README.txt
+%doc CHANGELOG.rst README.rst
 %dir %{py_sitescriptdir}/%{module}
 %{py_sitescriptdir}/%{module}/*.py[co]
-%if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/%{module}-*.egg-info
-%endif
 %{_examplesdir}/%{name}-%{version}
 %endif
 
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc CHANGELOG.rst README.txt
+%doc CHANGELOG.rst README.rst
 %{py3_sitescriptdir}/%{module}
 %{py3_sitescriptdir}/%{module}-%{version}-py*.egg-info
 %{_examplesdir}/python3-%{module}-%{version}
