@@ -1,29 +1,29 @@
 #
 # Conditional build:
-%bcond_without	tests	# do not perform "make test"
+%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
 %define		module		colorama
-%define		egg_name	colorama
-%define		pypi_name	colorama
 Summary:	Cross-platform colored terminal text
+Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Name:		python-%{module}
-Version:	0.3.7
-Release:	2
+Version:	0.4.1
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-Source0:	https://files.pythonhosted.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
-# Source0-md5:	349d2b02618d3d39e5c6aede36fe3c1a
+#Source0Download: https://pypi.org/simple/colorama/
+Source0:	https://files.pythonhosted.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
+# Source0-md5:	f927529cd1735f6f50ee2c61628e9c1f
 URL:		https://github.com/tartley/colorama
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.710
+BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
-BuildRequires:	python-modules
+BuildRequires:	python-modules >= 1:2.7
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules
+BuildRequires:	python3-modules >= 1:3.4
 BuildRequires:	python3-setuptools
 %endif
 BuildArch:	noarch
@@ -34,13 +34,13 @@ ANSI escape character sequences have long been used to produce colored
 terminal text and cursor positioning on Unix and Macs. Colorama makes
 this work on Windows, too, by wrapping stdout, stripping ANSI
 sequences it finds (which otherwise show up as gobbledygook in your
-output), and converting them into the appropriate win32 calls to
+output), and converting them into the appropriate Win32 calls to
 modify the state of the terminal. On other platforms, Colorama does
 nothing.
 
 Colorama also provides some shortcuts to help generate ANSI sequences
 but works fine in conjunction with any other ANSI sequence generation
-library, such as Termcolor (http://pypi.python.org/pypi/termcolor.)
+library, such as Termcolor (http://pypi.python.org/pypi/termcolor).
 
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
@@ -48,8 +48,29 @@ side-effect that existing applications or libraries which use ANSI
 sequences to produce colored output on Linux or Macs can now also work
 on Windows, simply by calling colorama.init().
 
+%description -l pl.UTF-8
+Do wyświetlania kolorowego tekstu na terminalu oraz przesuwania
+kursora w systemach Unix i Mac od dawna używane są sekwencje ANSI.
+Colorama sprawia, że działa to także pod Windows - poprzez
+przechwycenie stdout, wycinanie znalezionych sekwencji ANSI (które w
+przeciwnym wypadku wyświetliłyby się jako bełkot) i przekształcanie
+ich na odpowiednie wywołania Win32, modyfikujące stan terminala. Na
+innych platformach Colorama nie robi nic.
+
+Colorama zapewnia też pewne ułatwienia do generowania sekwencji ANSI,
+ale działa dobrze w połączeniu z dowolną inną biblioteką generującą
+sekwencje ANSI, taką jak Termcolor
+(http://pypi.python.org/pypi/termcolor).
+
+Efektem jest zapewnienie prostego, wieloplatformowego API do
+wypisywania kolorowego tekstu z Pythona, co ma miły efekt uboczny, że
+istniejące aplikacje czy biblioteki wykorzystujące sekwencje ANSI do
+tworzenia kolorowego wyjścia pod systemem Linux czy Mac będą teraz
+działać także pod Windows dzięki prostemu wywołaniu colorama.init().
+
 %package -n python3-%{module}
 Summary:	Cross-platform colored terminal text
+Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Group:		Libraries/Python
 
 %description -n python3-%{module}
@@ -63,13 +84,33 @@ nothing.
 
 Colorama also provides some shortcuts to help generate ANSI sequences
 but works fine in conjunction with any other ANSI sequence generation
-library, such as Termcolor (http://pypi.python.org/pypi/termcolor.)
+library, such as Termcolor (http://pypi.python.org/pypi/termcolor).
 
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
 side-effect that existing applications or libraries which use ANSI
 sequences to produce colored output on Linux or Macs can now also work
 on Windows, simply by calling colorama.init().
+
+%description -n python3-%{module} -l pl.UTF-8
+Do wyświetlania kolorowego tekstu na terminalu oraz przesuwania
+kursora w systemach Unix i Mac od dawna używane są sekwencje ANSI.
+Colorama sprawia, że działa to także pod Windows - poprzez
+przechwycenie stdout, wycinanie znalezionych sekwencji ANSI (które w
+przeciwnym wypadku wyświetliłyby się jako bełkot) i przekształcanie
+ich na odpowiednie wywołania Win32, modyfikujące stan terminala. Na
+innych platformach Colorama nie robi nic.
+
+Colorama zapewnia też pewne ułatwienia do generowania sekwencji ANSI,
+ale działa dobrze w połączeniu z dowolną inną biblioteką generującą
+sekwencje ANSI, taką jak Termcolor
+(http://pypi.python.org/pypi/termcolor).
+
+Efektem jest zapewnienie prostego, wieloplatformowego API do
+wypisywania kolorowego tekstu z Pythona, co ma miły efekt uboczny, że
+istniejące aplikacje czy biblioteki wykorzystujące sekwencje ANSI do
+tworzenia kolorowego wyjścia pod systemem Linux czy Mac będą teraz
+działać także pod Windows dzięki prostemu wywołaniu colorama.init().
 
 %prep
 %setup -q -n %{module}-%{version}
@@ -112,7 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG.rst README.rst
+%doc CHANGELOG.rst LICENSE.txt README.rst
 %dir %{py_sitescriptdir}/%{module}
 %{py_sitescriptdir}/%{module}/*.py[co]
 %{py_sitescriptdir}/%{module}-*.egg-info
@@ -122,7 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc CHANGELOG.rst README.rst
+%doc CHANGELOG.rst LICENSE.txt README.rst
 %{py3_sitescriptdir}/%{module}
 %{py3_sitescriptdir}/%{module}-%{version}-py*.egg-info
 %{_examplesdir}/python3-%{module}-%{version}
