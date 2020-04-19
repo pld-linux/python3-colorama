@@ -1,6 +1,5 @@
 #
 # Conditional build:
-%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
@@ -8,13 +7,13 @@
 Summary:	Cross-platform colored terminal text
 Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Name:		python-%{module}
-Version:	0.4.1
-Release:	2
+Version:	0.4.3
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/colorama/
 Source0:	https://files.pythonhosted.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
-# Source0-md5:	f927529cd1735f6f50ee2c61628e9c1f
+# Source0-md5:	02daee502863d24112a8c05a5d69a612
 URL:		https://github.com/tartley/colorama
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -23,9 +22,11 @@ BuildRequires:	python-modules >= 1:2.7
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
-BuildRequires:	python3-modules >= 1:3.4
+BuildRequires:	python3-modules >= 1:3.5
 BuildRequires:	python3-setuptools
 %endif
+BuildRequires:	sed >= 4.0
+Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -40,7 +41,7 @@ nothing.
 
 Colorama also provides some shortcuts to help generate ANSI sequences
 but works fine in conjunction with any other ANSI sequence generation
-library, such as Termcolor (http://pypi.python.org/pypi/termcolor).
+library, such as Termcolor (<https://pypi.org/project/termcolor/>).
 
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
@@ -60,7 +61,7 @@ innych platformach Colorama nie robi nic.
 Colorama zapewnia też pewne ułatwienia do generowania sekwencji ANSI,
 ale działa dobrze w połączeniu z dowolną inną biblioteką generującą
 sekwencje ANSI, taką jak Termcolor
-(http://pypi.python.org/pypi/termcolor).
+(<https://pypi.org/project/termcolor/>).
 
 Efektem jest zapewnienie prostego, wieloplatformowego API do
 wypisywania kolorowego tekstu z Pythona, co ma miły efekt uboczny, że
@@ -72,6 +73,7 @@ działać także pod Windows dzięki prostemu wywołaniu colorama.init().
 Summary:	Cross-platform colored terminal text
 Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Group:		Libraries/Python
+Requires:	python3-modules >= 1:3.5
 
 %description -n python3-%{module}
 ANSI escape character sequences have long been used to produce colored
@@ -84,7 +86,7 @@ nothing.
 
 Colorama also provides some shortcuts to help generate ANSI sequences
 but works fine in conjunction with any other ANSI sequence generation
-library, such as Termcolor (http://pypi.python.org/pypi/termcolor).
+library, such as Termcolor (<https://pypi.org/project/termcolor/>).
 
 This has the upshot of providing a simple cross-platform API for
 printing colored terminal text from Python, and has the happy
@@ -104,7 +106,7 @@ innych platformach Colorama nie robi nic.
 Colorama zapewnia też pewne ułatwienia do generowania sekwencji ANSI,
 ale działa dobrze w połączeniu z dowolną inną biblioteką generującą
 sekwencje ANSI, taką jak Termcolor
-(http://pypi.python.org/pypi/termcolor).
+(<https://pypi.org/project/termcolor/>).
 
 Efektem jest zapewnienie prostego, wieloplatformowego API do
 wypisywania kolorowego tekstu z Pythona, co ma miły efekt uboczny, że
@@ -115,13 +117,15 @@ działać także pod Windows dzięki prostemu wywołaniu colorama.init().
 %prep
 %setup -q -n %{module}-%{version}
 
+%{__sed} -i -e '1s,/usr/bin/env bash,/bin/sh,' demos/demo.sh
+
 %build
 %if %{with python2}
-%py_build %{?with_tests:test}
+%py_build
 %endif
 
 %if %{with python3}
-%py3_build %{?with_tests:test}
+%py3_build
 %endif
 
 %install
@@ -129,22 +133,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with python2}
 %py_install
+
 %py_postclean
+
+install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -a demos/*.{py,sh} $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+%{__sed} -i -e '1s,/usr/bin/python,%{__python},' $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}/*.py
+%{__sed} -i -e 's,^python ,%{__python},' $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}/demo.sh
 %endif
 
 %if %{with python3}
 %py3_install
-%endif
 
-%if %{with python2}
-install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-cp -a demos/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-%endif
-%if %{with python3}
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}
-cp -a demos/* $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}
-find $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version} -name '*.py' \
-	| xargs sed -i '1s|^#!.*python\b|#!%{__python3}|'
+cp -a demos/*.{py,sh} $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}
+%{__sed} -i -e '1s,/usr/bin/python,%{__python3},' $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}/*.py
+%{__sed} -i -e 's,^python ,%{__python3},' $RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}/demo.sh
 %endif
 
 %clean
