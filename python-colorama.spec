@@ -7,13 +7,13 @@
 Summary:	Cross-platform colored terminal text
 Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Name:		python-%{module}
-Version:	0.4.4
-Release:	4
+Version:	0.4.5
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/colorama/
 Source0:	https://files.pythonhosted.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
-# Source0-md5:	57b22f2597f63df051b69906fbf310cc
+# Source0-md5:	6abed05fb23a857a3ab22576148e7a4c
 URL:		https://github.com/tartley/colorama
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
