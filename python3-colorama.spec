@@ -3,20 +3,21 @@ Summary:	Cross-platform colored terminal text
 Summary(pl.UTF-8):	Wieloplatformowe kolorowanie tekstu na terminalu
 Name:		python3-%{module}
 Version:	0.4.6
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/colorama/
 Source0:	https://files.pythonhosted.org/packages/source/c/colorama/%{module}-%{version}.tar.gz
 # Source0-md5:	11fe1cbf8299798551ac88f824ea11c4
 URL:		https://github.com/tartley/colorama
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
-BuildRequires:	python3-modules >= 1:3.5
 BuildRequires:	python3-build
+BuildRequires:	python3-hatchling >= 0.25.1
 BuildRequires:	python3-installer
+BuildRequires:	python3-modules >= 1:3.7
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 2.044
 BuildRequires:	sed >= 4.0
-Requires:	python-modules >= 1:2.7
+Requires:	python3-modules >= 1:3.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
